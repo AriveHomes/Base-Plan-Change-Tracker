@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arive Homes | Base Plan Review</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-block">
+      <div class="arive-logo" aria-label="Arive Homes">
+        <div class="arive-wordmark official-ish">
+          <div class="arive-main">ARIVE</div>
+          <div class="arive-sub">HOMES</div>
+        </div>
+      </div>
+      <div class="brand-divider"></div>
+      <div class="brand-copy">
+        <div class="eyebrow">PLAN DEVELOPMENT</div>
+        <h1>Base Plan Review Dashboard</h1>
+        <p>Weekly management meeting tracker for base plan changes, decisions, and next actions.</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a id="sheetLink" class="link-btn" target="_blank" rel="noreferrer">Open Google Sheet</a>
+      <button id="refreshBtn" class="ghost-btn">Refresh</button>
+      <button id="exportBtn" class="primary-btn">Export CSV</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <aside class="sidebar card">
+      <div class="panel-head">
+        <div>
+          <h2>Floorplans</h2>
+          <p>Listed in spreadsheet order</p>
+        </div>
+        <span id="planCount" class="pill">0 plans</span>
+      </div>
+      <div class="search-row">
+        <input id="searchInput" placeholder="Search floorplans..." />
+      </div>
+      <div class="filter-row">
+        <select id="statusFilter">
+          <option value="All">All statuses</option>
+          <option value="Not Started">Not Started</option>
+          <option value="In Review">In Review</option>
+          <option value="Approved Change">Approved Change</option>
+          <option value="No Change">No Change</option>
+          <option value="Complete">Complete</option>
+        </select>
+      </div>
+      <div id="planList" class="plan-list"></div>
+    </aside>
+
+    <section class="workspace">
+      <section class="card hero-card">
+        <div class="hero-left">
+          <div class="mini-label">Selected floorplan</div>
+          <h2 id="selectedPlanName">Choose a floorplan</h2>
+          <p id="selectedAgentNotes" class="agent-notes">Hover over floorplan names to see sales agent notes. Click a plan to update meeting direction.</p>
+        </div>
+        <div class="hero-status">
+          <label>Review Status</label>
+          <select id="reviewStatus"></select>
+        </div>
+      </section>
+
+      <section class="grid-two">
+        <form id="reviewForm" class="card form-card">
+          <div class="panel-head form-title-row">
+            <div>
+              <h2>Weekly Management Meeting Changes Discussed</h2>
+              <p>Track what was discussed and what needs to happen next.</p>
+            </div>
+            <span id="saveState" class="save-state">Ready</span>
+          </div>
+
+          <div class="form-grid">
+            <label>
+              Meeting Date
+              <input id="meetingDate" type="date" />
+            </label>
+            <label>
+              Owner
+              <input id="owner" placeholder="Who owns the follow-up?" />
+            </label>
+          </div>
+
+          <label>
+            Changes Discussed
+            <textarea id="changesDiscussed" rows="5" placeholder="Example: Remove corner pantry, study 2nd upstairs bath option, revise elevation..."></textarea>
+          </label>
+
+          <label>
+            Decision / Direction
+            <textarea id="decision" rows="4" placeholder="Example: Move forward with concept drawing, price option, leave plan as-is..."></textarea>
+          </label>
+
+          <label>
+            Next Action
+            <textarea id="nextAction" rows="3" placeholder="Example: Curtis to sketch, purchasing to price, sales to review..."></textarea>
+          </label>
+
+          <label>
+            Final Notes
+            <textarea id="finalNotes" rows="3" placeholder="Any extra notes from management, sales, design, or purchasing..."></textarea>
+          </label>
+
+          <div class="button-row">
+            <button type="submit" class="primary-btn">Save Plan Update</button>
+            <button type="button" id="clearBtn" class="ghost-btn danger">Clear Selected Plan</button>
+          </div>
+        </form>
+
+        <section class="card snapshot-card">
+          <div class="panel-head">
+            <div>
+              <h2>Meeting Snapshot</h2>
+              <p>Plans with active notes or decisions</p>
+            </div>
+          </div>
+          <div class="stats-row">
+            <div><strong id="completeCount">0</strong><span>Complete</span></div>
+            <div><strong id="activeCount">0</strong><span>Active Notes</span></div>
+            <div><strong id="reviewCount">0</strong><span>In Review</span></div>
+          </div>
+          <div id="activityList" class="activity-list"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast">Saved</div>
+  <iframe id="postFrame" name="postFrame" style="display:none"></iframe>
+  <script src="config.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
