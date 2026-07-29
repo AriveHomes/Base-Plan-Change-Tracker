@@ -61,7 +61,7 @@
       if (!state.selected && state.plans.length) state.selected = state.plans[0].name;
       populateTypeFilter();
       renderAll();
-      const brendan = state.plans.some(p => p.name.toLowerCase() === 'brendan');
+      setStatus(`Live data loaded from Google Sheet. ${state.plans.length} plans found.`, 'success');
       setStatus(`Live data loaded from Google Sheet. ${plans.length} plans found.`, 'success');
     } catch (err) {
       console.error(err);
