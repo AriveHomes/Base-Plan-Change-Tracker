@@ -62,7 +62,7 @@
       populateTypeFilter();
       renderAll();
       const brendan = state.plans.some(p => p.name.toLowerCase() === 'brendan');
-      setStatus('success', `Live data loaded from Google Sheet. ${state.plans.length} plans found. Brendan found: ${brendan ? 'YES' : 'NO'}.`);
+      setStatus(`Live data loaded from Google Sheet. ${plans.length} plans found.`, 'success');
     } catch (err) {
       console.error(err);
       setStatus('error', `Could not load live data. ${err.message || err}. Open debug.html to test the Apps Script URL.`);
