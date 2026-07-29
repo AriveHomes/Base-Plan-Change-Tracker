@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arive Dashboard Debug</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar panel">
+      <div class="brand-block"><img class="brand-logo" src="assets/arive-logo-color.png" alt="Arive Homes logo" /><div class="brand-copy"><div class="eyebrow">ARIVE HOMES</div><h1>Connection Debug</h1><p class="brand-subtitle">Use this page to confirm GitHub Pages is talking to Apps Script.</p></div></div>
+      <div class="top-actions"><a class="btn ghost" href="index.html">Back to Dashboard</a></div>
+    </header>
+    <section class="panel details">
+      <h2>Apps Script Live Data Test</h2>
+      <p class="small-note">This page checks whether GitHub Pages can reach your Apps Script URL using JSONP.</p>
+      <div style="height:16px"></div>
+      <button id="runBtn" class="btn primary" type="button">Run live data test</button>
+      <a id="scriptDirect" class="btn ghost" href="#" target="_blank" rel="noreferrer">Open Apps Script URL</a>
+      <a id="sheetDirect" class="btn ghost" href="https://docs.google.com/spreadsheets/d/1nZZrP-5gtEjAUbKmVSPSiYmQIRrUXaXQ6jucodH1gic/edit" target="_blank" rel="noreferrer">Open Google Sheet</a>
+      <div style="height:18px"></div>
+      <pre id="output" style="white-space:pre-wrap;background:#061512;color:#eaffea;border-radius:20px;padding:18px;min-height:320px;overflow:auto"></pre>
+    </section>
+  </div>
+  <script src="config.js"></script>
+  <script>
+    const cfg = window.ARIVE_CONFIG || {};
+    const scriptUrl = (cfg.WEB_APP_URL || cfg.APPS_SCRIPT_URL || cfg.GOOGLE_SCRIPT_URL || '').trim();
+    const output = document.getElementById('output');
+    const direct = document.getElementById('scriptDirect');
+    if (scriptUrl && !scriptUrl.includes('PASTE_YOUR_WORKING')) direct.href = scriptUrl + '?action=list&callback=test';
+    output.textContent = 'Script URL from config.js:\n' + (scriptUrl || '(missing)') + '\n\nClick Run live data test.';
+    document.getElementById('runBtn').addEventListener('click', runTest);
+    function runTest() {
+      if (!scriptUrl || scriptUrl.includes('PASTE_YOUR_WORKING')) { output.textContent = 'ERROR: config.js still has the placeholder URL. Paste your working /exec URL first.'; return; }
+      output.textContent = 'Testing Apps Script...';
+      jsonp(scriptUrl, { action: 'list', t: Date.now() }, 20000).then(data => {
+        const plans = data.plans || data.floorplans || [];
+        const changes = data.changes || [];
+        const names = plans.map(p => p.name || p.floorplan || p.plan || '');
+        const brendan = names.some(n => String(n).toLowerCase() === 'brendan');
+        output.textContent = [
+          'SUCCESS: Apps Script responded.',
+          'Plans found: ' + plans.length,
+          'Changes found: ' + changes.length,
+          'Brendan found: ' + (brendan ? 'YES' : 'NO'),
+          '',
+          'First 10 floorplans:',
+          names.slice(0,10).join(', '),
+          '',
+          'Raw response preview:',
+          JSON.stringify(data, null, 2).slice(0, 7000)
+        ].join('\n');
+      }).catch(err => {
+        output.textContent = 'FAILED: ' + (err.message || err) + '\n\nFixes to check:\n1. config.js has the exact /exec URL that worked in your browser.\n2. Apps Script deployment access is set to Anyone.\n3. You are using the browser where Apps Script worked, or clear site data for script.google.com.';
+      });
+    }
+    function jsonp(url, params, timeoutMs) {
+      return new Promise((resolve, reject) => {
+        const cb = 'debugCb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        const script = document.createElement('script');
+        const timer = setTimeout(() => cleanup(() => reject(new Error('Unable to reach Apps Script'))), timeoutMs || 15000);
+        window[cb] = data => cleanup(() => resolve(data));
+        const fullUrl = new URL(url);
+        Object.entries(params || {}).forEach(([k, v]) => fullUrl.searchParams.set(k, v));
+        fullUrl.searchParams.set('callback', cb);
+        script.src = fullUrl.toString();
+        script.onerror = () => cleanup(() => reject(new Error('Script request failed')));
+        function cleanup(done) { clearTimeout(timer); try { delete window[cb]; } catch(e) { window[cb] = undefined; } script.remove(); done(); }
+        document.head.appendChild(script);
+      });
+    }
+  </script>
+</body>
+</html>

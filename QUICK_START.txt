@@ -1,0 +1,6 @@
+1. Upload the contents of this folder to the root of your GitHub repository.
+2. Replace Apps Script code with google-apps-script/Code.gs.
+3. Save Apps Script and deploy a New version as Web app.
+4. Copy the /exec URL.
+5. Paste the /exec URL into config.js in all three URL fields.
+6. Open debug.html first. It should say Brendan found: YES.
