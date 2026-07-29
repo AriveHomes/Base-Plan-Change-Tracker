@@ -1,31 +1,13 @@
-# Arive Homes Base Plan Change Tracker
+# Arive Base Plan Change Tracker - Dark Mode Logo Patch
 
-## Upload to GitHub
-Upload these files to the root of your GitHub repository:
+This package keeps the working Apps Script connection and updates the dashboard UI.
+
+Replace these files in GitHub:
 
 - index.html
 - styles.css
 - app.js
-- config.js
-- debug.html
-- README.md
-- google-apps-script/Code.gs
 
-## Apps Script
-1. Open the Google Sheet.
-2. Extensions > Apps Script.
-3. Replace the current code with google-apps-script/Code.gs from this package.
-4. Save.
-5. Deploy > Manage deployments > pencil icon > New version > Deploy.
-6. Copy the Web app URL ending in /exec.
+Keep your existing config.js because it already has the working Apps Script /exec URL.
 
-## config.js
-Paste that same working /exec URL into all three fields:
-
-- APPS_SCRIPT_URL
-- GOOGLE_SCRIPT_URL
-- WEB_APP_URL
-
-## Test
-Open debug.html on your GitHub Pages site. Click Run live data test.
-It should say Brendan found: YES.
+After uploading, test with ?v=dark1 to avoid browser cache.
